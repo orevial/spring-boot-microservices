@@ -1,6 +1,10 @@
 package io.bdx.microservices.config;
 
-import io.bdx.microservices.SearchServiceInstance;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Inject;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
@@ -12,17 +16,16 @@ import org.apache.curator.x.discovery.details.InstanceSerializer;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
-import javax.inject.Inject;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import io.bdx.microservices.SearchServiceInstance;
 
 @Configuration
 public class ZookeeperConfig {
     private static final Logger logger = LoggerFactory.getLogger(ZookeeperConfig.class);
+    public static final String SERVICES_DISCOVERY_BASE_PATH = "/services/discovery/";
 
     private AtomicBoolean built = new AtomicBoolean(false);
 
@@ -30,12 +33,19 @@ public class ZookeeperConfig {
     private AtomicReference<ServiceDiscovery<SearchServiceInstance>> serviceDiscovery = new AtomicReference<>();
 
     @Inject
-    protected Environment env;
+    private ServiceInstance<SearchServiceInstance> configServiceInstance;
+
+    @Value("${zookeeper.url}")
+    private String zookeeperUrl;
+
+    @Value("${zookeeper.port}")
+    private String zookeeperPort;
+
     private CuratorFramework zkClient;
 
     @Bean
     public CuratorFramework getZkClient() {
-        String zkURL = "localhost:2181";
+        String zkURL = zookeeperUrl + ":" + zookeeperPort;
 
         // Initialize zookeeper client and make sure it is connected before doing anything else
         zkClient = CuratorFrameworkFactory.newClient(zkURL, new ExponentialBackoffRetry(1000, 10));
@@ -66,22 +76,15 @@ public class ZookeeperConfig {
     }
 
     protected void configureServiceInstance() throws Exception {
-        SearchServiceInstance payload = new SearchServiceInstance()
-                .setVersion("0.0.1-SNAPSHOT");
-        serviceInstance.set(ServiceInstance.<SearchServiceInstance>builder()
-                .name("test-app-name")
-                .payload(payload)
-                .port(8080)
-                .address("127.0.0.1")
-                .build());
+        serviceInstance.set(configServiceInstance);
     }
 
     protected void configureServiceDiscovery() {
         serviceDiscovery.set(ServiceDiscoveryBuilder.builder(SearchServiceInstance.class)
                 .client(zkClient)
-                .basePath("/services/discovery/")
+                .basePath(SERVICES_DISCOVERY_BASE_PATH)
                 .serializer(instanceSerializer())
-                .thisInstance(serviceInstance.get())
+                .thisInstance(configServiceInstance)
                 .build());
     }
 

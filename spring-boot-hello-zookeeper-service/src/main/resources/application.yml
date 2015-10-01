@@ -1,0 +1,8 @@
+service:
+  min-port: 20000
+  max-port: 21000
+
+zookeeper:
+  url: a06solr001.cdbdx.biz
+  port: 2181
+
