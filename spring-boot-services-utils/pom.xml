@@ -5,15 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.bdx.microservices</groupId>
-    <artifactId>spring-boot-hello-zookeeper-service</artifactId>
-    <name>Spring Boot Hello Zookeeper service</name>
-    <description>A Spring Boot service that registers itself to Zookeeper</description>
+    <artifactId>spring-boot-services-utils</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>io.bdx.microservices</groupId>
-            <artifactId>spring-boot-services-utils</artifactId>
+            <artifactId>spring-boot-zookeeper-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

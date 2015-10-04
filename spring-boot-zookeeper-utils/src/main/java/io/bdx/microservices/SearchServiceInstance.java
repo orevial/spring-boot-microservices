@@ -16,6 +16,10 @@ public class SearchServiceInstance {
 
     private String gitCommitId;
 
+    private String simplifiedName;
+
+    private String description;
+
     public String getStartDate() {
         return startDate;
     }
@@ -39,6 +43,24 @@ public class SearchServiceInstance {
 
     public SearchServiceInstance setGitCommitId(String gitCommitId) {
         this.gitCommitId = gitCommitId;
+        return this;
+    }
+
+    public String getSimplifiedName() {
+        return simplifiedName;
+    }
+
+    public SearchServiceInstance setSimplifiedName(String simplifiedName) {
+        this.simplifiedName = simplifiedName;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public SearchServiceInstance setDescription(String description) {
+        this.description = description;
         return this;
     }
 }

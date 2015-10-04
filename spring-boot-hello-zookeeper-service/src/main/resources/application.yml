@@ -3,6 +3,5 @@ service:
   max-port: 21000
 
 zookeeper:
-  url: a06solr001.cdbdx.biz
+  url: localhost
   port: 2181
-

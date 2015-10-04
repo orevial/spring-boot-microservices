@@ -1,10 +1,6 @@
 package io.bdx.microservices.config;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.inject.Inject;
-
+import io.bdx.microservices.SearchServiceInstance;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
@@ -20,7 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.bdx.microservices.SearchServiceInstance;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Configuration
 public class ZookeeperConfig {
@@ -31,9 +28,6 @@ public class ZookeeperConfig {
 
     private AtomicReference<ServiceInstance<SearchServiceInstance>> serviceInstance = new AtomicReference<>();
     private AtomicReference<ServiceDiscovery<SearchServiceInstance>> serviceDiscovery = new AtomicReference<>();
-
-    @Inject
-    private ServiceInstance<SearchServiceInstance> configServiceInstance;
 
     @Value("${zookeeper.url}")
     private String zookeeperUrl;
@@ -58,7 +52,8 @@ public class ZookeeperConfig {
             }
         }
         try {
-            build();
+            configureServiceDiscovery(this.serviceInstance.get());
+            this.serviceDiscovery.get().start();
         } catch (Exception e) {
             logger.error("Service registration failed !", e);
             throw new RuntimeException(e);
@@ -66,25 +61,27 @@ public class ZookeeperConfig {
         return zkClient;
     }
 
-    public void build() throws Exception {
+    public void prepareServiceDiscovery(ServiceInstance<SearchServiceInstance> serviceInstance) {
         if (built.compareAndSet(false, true)) {
-            // UriSpec uriSpec = new UriSpec(properties.getUriSpec());
-            configureServiceInstance();
-            configureServiceDiscovery();
-            this.serviceDiscovery.get().start();
+            try {
+                configureServiceInstance(serviceInstance);
+            } catch (Exception e) {
+                logger.error("Service registration failed !", e);
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    protected void configureServiceInstance() throws Exception {
-        serviceInstance.set(configServiceInstance);
+    protected void configureServiceInstance(ServiceInstance<SearchServiceInstance> serviceInstance) throws Exception {
+        this.serviceInstance.set(serviceInstance);
     }
 
-    protected void configureServiceDiscovery() {
+    protected void configureServiceDiscovery(ServiceInstance<SearchServiceInstance> serviceInstance) {
         serviceDiscovery.set(ServiceDiscoveryBuilder.builder(SearchServiceInstance.class)
                 .client(zkClient)
                 .basePath(SERVICES_DISCOVERY_BASE_PATH)
                 .serializer(instanceSerializer())
-                .thisInstance(configServiceInstance)
+                .thisInstance(serviceInstance)
                 .build());
     }
 
