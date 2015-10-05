@@ -1,0 +1,6 @@
+service:
+  port: 20015
+
+zookeeper:
+  url: localhost
+  port: 2181

@@ -26,11 +26,14 @@ public class BaseConfig {
     @Inject
     private ZookeeperConfig zookeeperConfig;
 
-    @Value("${service.min-port}")
-    private int minPort;
+    @Value("${service.port:0}")
+    private Integer port;
 
-    @Value("${service.max-port}")
-    private int maxPort;
+    @Value("${service.min-port:0}")
+    private Integer minPort;
+
+    @Value("${service.max-port:0}")
+    private Integer maxPort;
 
     @Value("${info.app.artifact}")
     private String artifactId;
@@ -51,7 +54,9 @@ public class BaseConfig {
         EmbeddedServletContainerCustomizer container = new EmbeddedServletContainerCustomizer() {
             public void customize(ConfigurableEmbeddedServletContainer container) {
                 int availablePort = 0;
-                if (maxPort == 0 || minPort == 0) {
+                if(port != 0) {
+                    availablePort = port;
+                } else if (maxPort == 0 || minPort == 0) {
                     if (minPort == 0) {
                         availablePort = SocketUtils.findAvailableTcpPort();
                     } else {

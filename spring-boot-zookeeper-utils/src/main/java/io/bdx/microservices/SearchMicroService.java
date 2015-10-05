@@ -8,8 +8,8 @@ package io.bdx.microservices;
  *
  */
 public enum SearchMicroService {
-    SEARCH_SERVICE("search-service"),
-    EDGE_SERVICE("edge-service");
+    SPRING_BOOT_HELLO_ZOOKEEPER_SERVICE("spring-boot-hello-zookeeper-service"),
+    SPRING_BOOT_DISCOVERY_SERVICE("spring-boot-discovery-service");
 
     private String appName;
 
