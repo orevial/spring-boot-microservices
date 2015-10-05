@@ -1,7 +1,0 @@
-service:
-  min-port: 20000
-  max-port: 21000
-
-zookeeper:
-  url: localhost
-  port: 2181
