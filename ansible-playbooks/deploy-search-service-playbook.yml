@@ -1,0 +1,13 @@
+---
+- hosts: "{{hosts}}"
+  vars:
+    - module_name: spring-boot-hello-service
+  tasks:
+    - git: repo=https://github.com/orevial/spring-boot-microservices.git
+            dest="{{ ansible_env.PWD }}"
+      name: Update local Git repository
+
+    - command: mvn spring-boot:run
+      args:
+        chdir: "{{ ansible_env.PWD }}/{{module_name}}"
+      name: Deploying last version of module
