@@ -43,7 +43,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.bdx.microservices.Application</mainClass>
+                            <mainClass>io.bdx.microservices.io.bdx.microservices.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
