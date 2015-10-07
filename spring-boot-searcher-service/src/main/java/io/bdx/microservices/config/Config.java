@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-/**
- * Created by Olivier on 04/10/2015.
- */
 @Configuration
 public class Config {
 
@@ -41,6 +38,6 @@ public class Config {
 
 
     public String getEsIndex() {
-        return esIndex;
+        return null;
     }
 }
