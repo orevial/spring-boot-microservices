@@ -1,62 +1,40 @@
-package io.bdx.microservices.search.insert;
+package io.bdx.microservices.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
-import io.bdx.microservices.search.insert.model.CommuneAire;
+import io.bdx.microservices.config.Config;
+import io.bdx.microservices.model.CommuneAire;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-@EnableAutoConfiguration
-@ComponentScan("io.bdx.microservices")
-public class Application {
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+@Service
+public class ImporterService {
+    private static final Logger logger = LoggerFactory.getLogger(ImporterService.class);
 
-    private static ObjectMapper mapper = new ObjectMapper();
-    public static final Properties props = new Properties();
-    private static Client esClient;
-    private static ExecutorService executorService = Executors.newFixedThreadPool(8);
+    private ObjectMapper mapper = new ObjectMapper();
+    private ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-    static {
-        try {
-            props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("search-insert.properties"));
-        } catch (IOException e) {
-            logger.error("Impossible de charger les propriétés!", e);
-        }
-    }
-    private static int NB_OFFERS = Integer.valueOf(props.getProperty("nboffers", "100"));
+    @Inject
+    private Config appConfig;
 
-    public static boolean storeGeolocatedOffersSeparately = Boolean.valueOf(props
-            .getProperty("index.geolocated.offer.separately"));
+    @Inject
+    private Client esClient;
 
-
-    public static void main(String[] args) throws Exception {
-//        SpringApplication.run(Application.class, args);
-
-        loadData();
-    }
-
-    public static void loadData() throws IOException {
-        MongoClientURI uri = new MongoClientURI(props.getProperty("mongodb.uri"));
-
+    public void loadData() throws IOException {
+        MongoClientURI uri = new MongoClientURI(appConfig.getMongoDbUri());
         MongoClient mongoClient = new MongoClient(uri);
 
-        esClient = new TransportClient().addTransportAddress(new InetSocketTransportAddress(
-                props.getProperty("es.url"),
-                Integer.valueOf(props.getProperty("es.port"))));
         try {
             DB db = mongoClient.getDB("aoc_aop");
             DBCollection coll = db.getCollection("communes_aires");
@@ -82,11 +60,11 @@ public class Application {
         }
     }
 
-    private static void saveProduct(CommuneAire communeAire) throws JsonProcessingException {
+    private void saveProduct(CommuneAire communeAire) throws JsonProcessingException {
         executorService.execute(new FutureTask<IndexResponse>(new EsIndexer(communeAire, communeAire.getCi())));
     }
 
-    private static class EsIndexer implements Callable<IndexResponse> {
+    private class EsIndexer implements Callable<IndexResponse> {
 
         private String commune;
         private final String communeId;

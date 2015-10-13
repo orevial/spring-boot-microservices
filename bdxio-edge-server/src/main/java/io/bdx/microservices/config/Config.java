@@ -1,4 +1,4 @@
-package io.bdx.microservices.service.config;
+package io.bdx.microservices.config;
 
 import org.springframework.context.annotation.Configuration;
 

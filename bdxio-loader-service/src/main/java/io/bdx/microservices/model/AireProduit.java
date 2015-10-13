@@ -1,4 +1,4 @@
-package io.bdx.microservices.search.insert.model;
+package io.bdx.microservices.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

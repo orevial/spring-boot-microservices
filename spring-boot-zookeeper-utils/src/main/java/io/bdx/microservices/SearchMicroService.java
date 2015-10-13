@@ -9,8 +9,9 @@ package io.bdx.microservices;
  */
 public enum SearchMicroService {
     SPRING_BOOT_HELLO_ZOOKEEPER_SERVICE("spring-boot-hello-zookeeper-service"),
-    SPRING_BOOT_DISCOVERY_SERVICE("spring-boot-discovery-service"),
-    SPRING_BOOT_SEARCHER_SERVICE("spring-boot-searcher-service");
+    BDXIO_EDGE_SERVER("bdxio-edge-server"),
+    BDX_IO_SEARCHER_SERVICE("bdxio-searcher-service"),
+    BDX_IO_LOADER_SERVICE("bdxio-loader-service");
 
     private String appName;
 
