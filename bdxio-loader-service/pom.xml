@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.bdx.microservices</groupId>
-    <artifactId>spring-boot-loader-service</artifactId>
-    <name>Spring Boot Loader Service</name>
+    <artifactId>bdxio-loader-service</artifactId>
+    <name>BDX IO Loader Service</name>
     <description>Service responsible for loading data from Mongo to ElasticSearch</description>
     <version>1.0-SNAPSHOT</version>
 

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.bdx.microservices</groupId>
-    <artifactId>spring-boot-searcher-service</artifactId>
-    <name>Spring Boot Searcher service</name>
-    <description>A Spring Boot service that searches documents on an ElasticSearch</description>
+    <artifactId>bdxio-edge-server</artifactId>
+    <name>Bdx IO Edge Server</name>
+    <description>A Spring Boot service that acts as an edge server, routing requests when needed</description>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -16,21 +16,11 @@
             <artifactId>spring-boot-services-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>1.2.6.RELEASE</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>1.2.0</version>
         </dependency>
     </dependencies>
 
@@ -66,16 +56,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals><goal>repackage</goal></goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+
 </project>

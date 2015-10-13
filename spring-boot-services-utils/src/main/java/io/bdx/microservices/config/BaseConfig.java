@@ -74,10 +74,7 @@ public class BaseConfig {
     }
 
     private ServiceInstance<SearchServiceInstance> initializeZookeeperDiscovery(int port) {
-        SearchServiceInstance payload = new SearchServiceInstance()
-                .setDescription(appDescription)
-                .setSimplifiedName(appName)
-                .setVersion(appVersion);
+        SearchServiceInstance payload = new SearchServiceInstance();
 
         try {
             return ServiceInstance.<SearchServiceInstance>builder()

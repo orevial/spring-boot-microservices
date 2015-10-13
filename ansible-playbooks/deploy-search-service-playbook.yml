@@ -1,7 +1,7 @@
 ---
 - hosts: "{{hosts}}"
   vars:
-    - module_name: spring-boot-searcher-service
+    - module_name: bdxio-searcher-service
   tasks:
     - git: repo=https://github.com/orevial/spring-boot-microservices.git
             dest="{{ ansible_env.PWD }}/spring-boot-microservices/"
