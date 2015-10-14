@@ -25,6 +25,7 @@ public class DiscoveryService {
         for (SearchMicroService microService : SearchMicroService.values()) {
             map.put(microService.getAppName(), zkService.getAllInstancesForService(microService));
         }
+
         return map;
     }
 
