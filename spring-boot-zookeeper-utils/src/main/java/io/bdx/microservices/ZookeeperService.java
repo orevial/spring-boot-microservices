@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * Basic Operations for zookeeper.
  */
 @Service
-public class ZookeeperService {
+public class ZookeeperService implements DiscoveryService {
 
     @Inject
     private CuratorFramework zkClient;
@@ -72,5 +72,10 @@ public class ZookeeperService {
     public Collection<ServiceInstance<SearchServiceInstance>> getAllInstancesForService(SearchMicroService service)
             throws Exception {
         return getServiceProvider(service).getAllInstances();
+    }
+
+    public ServiceInstance<SearchServiceInstance> getInstance(SearchMicroService service)
+            throws Exception {
+        return getServiceProvider(service).getInstance();
     }
 }

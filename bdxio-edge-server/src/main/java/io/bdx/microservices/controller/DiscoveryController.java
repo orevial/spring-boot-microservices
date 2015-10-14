@@ -1,30 +1,31 @@
 package io.bdx.microservices.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.bdx.microservices.SearchMicroService;
-import io.bdx.microservices.SearchServiceInstance;
-import io.bdx.microservices.model.FrontDiscoveryResponse;
-import org.apache.catalina.ssi.SSICommand;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import io.bdx.microservices.service.DiscoveryService;
 
-import javax.inject.Inject;
-import javax.xml.ws.Service;
-import java.util.Collection;
-import java.util.Map;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.bdx.microservices.SearchMicroService;
+import io.bdx.microservices.SearchServiceInstance;
+import io.bdx.microservices.model.FrontDiscoveryResponse;
+import io.bdx.microservices.service.DiscoveryProxyService;
 
 @RestController
 @RequestMapping("/discovery")
 public class DiscoveryController {
 
     @Inject
-    private DiscoveryService discoveryService;
+    private DiscoveryProxyService discoveryService;
 
     private ObjectMapper mapper = new ObjectMapper();
 
