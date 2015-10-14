@@ -6,6 +6,7 @@ import com.mongodb.*;
 import io.bdx.microservices.config.Config;
 import io.bdx.microservices.model.ESAppellationDocument;
 import io.bdx.microservices.model.ESCommuneDocument;
+import io.bdx.microservices.model.MongoAireProduit;
 import io.bdx.microservices.model.MongoCommuneAire;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -44,19 +45,20 @@ public class ImporterService {
         try {
             DB db = mongoClient.getDB("aoc_aop");
             DBCollection communesAiresCollection = db.getCollection("communes_aires");
+            DBCollection airesProduitsCollection = db.getCollection("aires_produits");
 
             logger.info(communesAiresCollection.getFullName() + " - Nb elements to load : " + communesAiresCollection.getCount());
 
             BasicDBObject sort = new BasicDBObject("ci", 1);
-            DBCursor cursor = communesAiresCollection.find().sort(sort);
+            DBCursor communesCursor = communesAiresCollection.find().sort(sort);
             nbIndexedDocuments = 0;
             initializeBulkProcessor();
 
             ESCommuneDocument previousCommune = null;
             ESCommuneDocument currentCommune = null;
             boolean commitPreviousCommune = false;
-            while(cursor.hasNext()) {
-                DBObject next = cursor.next();
+            while(communesCursor.hasNext()) {
+                DBObject next = communesCursor.next();
                 MongoCommuneAire currentMongoCommuneAire = mapper.readValue(next.toString(), MongoCommuneAire.class);
 
                 if(currentCommune == null || !previousCommune.getCi().equals(currentMongoCommuneAire.getCi())) {
@@ -71,10 +73,26 @@ public class ImporterService {
                     }
                 }
 
-                currentCommune.addAppellations(new ESAppellationDocument(
-                        currentMongoCommuneAire.getAireGeo(),
-                        currentMongoCommuneAire.getIda()
-                ));
+                try {
+                    // Fetch all products from other Mongo collections
+                    BasicDBObject productsSort = new BasicDBObject("produit", 1);
+                    BasicDBObject productsQuery = new BasicDBObject("ida", Integer.valueOf(currentMongoCommuneAire.getIda()));
+                    DBCursor productsCursor = airesProduitsCollection.find(productsQuery).sort(productsSort);
+
+                    while(productsCursor.hasNext()) {
+                        DBObject nextProduct = productsCursor.next();
+                        MongoAireProduit produit = mapper.readValue(nextProduct.toString(), MongoAireProduit.class);
+                        currentCommune.addAppellations(new ESAppellationDocument(
+                                produit.getIda(),
+                                produit.getAireGeo(),
+                                produit.getProduit()
+                        ));
+                    }
+                } catch (NumberFormatException e) {
+                    logger.info("Number format exception for : {}", currentMongoCommuneAire.getIda());
+                } catch (IOException e) {
+                    logger.info("IO exception... {}");
+                }
 
                 if(commitPreviousCommune) {
                     commitPreviousCommune = false;

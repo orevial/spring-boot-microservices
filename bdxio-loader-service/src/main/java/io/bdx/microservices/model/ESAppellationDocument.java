@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by Presentation on 14/10/2015.
  */
 public class ESAppellationDocument {
-    @JsonProperty("aire_geo")
     private String aireGeo;
     private String ida;
+    private String productName;
 
-    public ESAppellationDocument(String aireGeo, String ida) {
+    public ESAppellationDocument(String aireGeo, String ida, String productName) {
         this.aireGeo = aireGeo;
         this.ida = ida;
+        this.productName = productName;
     }
 
     public String getAireGeo() {
@@ -29,5 +30,13 @@ public class ESAppellationDocument {
 
     public void setIda(String ida) {
         this.ida = ida;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }
