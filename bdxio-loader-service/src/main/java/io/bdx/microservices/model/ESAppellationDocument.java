@@ -1,7 +1,5 @@
 package io.bdx.microservices.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by Presentation on 14/10/2015.
  */

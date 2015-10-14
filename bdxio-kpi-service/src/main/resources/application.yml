@@ -1,0 +1,12 @@
+service:
+  min-port: 20000
+  max-port: 21000
+
+zookeeper:
+  url: 192.168.1.38
+  port: 2181
+
+elastic-search:
+  url: 192.168.1.38
+  port: 9300
+  index: aoc_aop

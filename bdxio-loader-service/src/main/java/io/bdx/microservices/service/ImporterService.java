@@ -1,13 +1,9 @@
 package io.bdx.microservices.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.*;
-import io.bdx.microservices.config.Config;
-import io.bdx.microservices.model.ESAppellationDocument;
-import io.bdx.microservices.model.ESCommuneDocument;
-import io.bdx.microservices.model.MongoAireProduit;
-import io.bdx.microservices.model.MongoCommuneAire;
+import java.io.IOException;
+
+import javax.inject.Inject;
+
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -17,10 +13,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
+import io.bdx.microservices.config.Config;
+import io.bdx.microservices.model.ESAppellationDocument;
+import io.bdx.microservices.model.ESCommuneDocument;
+import io.bdx.microservices.model.MongoAireProduit;
+import io.bdx.microservices.model.MongoCommuneAire;
 
 @Service
 public class ImporterService {
@@ -29,7 +36,6 @@ public class ImporterService {
     public int nbIndexedDocuments = 0;
 
     private ObjectMapper mapper = new ObjectMapper();
-    private ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     @Inject
     private Config appConfig;
@@ -147,7 +153,7 @@ public class ImporterService {
                         logger.info("After bulk with failure...", failure);
                     }
                 })
-                .setBulkActions(200)
+                .setBulkActions(50)
                 .setConcurrentRequests(1)
                 .build();
     }
