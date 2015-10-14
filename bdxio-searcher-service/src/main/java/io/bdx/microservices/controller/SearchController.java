@@ -1,6 +1,8 @@
 package io.bdx.microservices.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bdx.microservices.config.Config;
+import io.bdx.microservices.model.CityResult;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
@@ -26,17 +28,24 @@ public class SearchController {
     @Inject
     private Client esClient;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @RequestMapping(method = RequestMethod.GET, value = "/city/{city}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SearchHit[] searchByCity(@PathVariable String city) throws Exception {
+    public List<CityResult> searchByCity(@PathVariable String city) throws Exception {
         SearchResponse response = esClient.prepareSearch("aoc_aop")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchQuery("commune", city))
                 .execute()
                 .actionGet();
+
+        List<CityResult> cityResults = new ArrayList<>();
         if(response != null) {
-            return response.getHits().getHits();
+            for(SearchHit hit : response.getHits().getHits()) {
+                CityResult cityResult = objectMapper.readValue(hit.getSourceAsString(), CityResult.class);
+                cityResults.add(cityResult);
+            }
         }
-        return null;
+        return cityResults;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/geo/{aireGeo}", produces = MediaType.APPLICATION_JSON_VALUE)
