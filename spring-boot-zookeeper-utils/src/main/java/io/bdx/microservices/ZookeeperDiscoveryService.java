@@ -14,10 +14,10 @@ import org.apache.curator.x.discovery.ServiceProvider;
 import org.springframework.stereotype.Service;
 
 /**
- * Basic Operations for zookeeper.
+ * Zookeeper implementation of {@link DiscoveryService}.
  */
 @Service
-public class ZookeeperService implements DiscoveryService {
+public class ZookeeperDiscoveryService implements DiscoveryService {
 
     @Inject
     private CuratorFramework zkClient;

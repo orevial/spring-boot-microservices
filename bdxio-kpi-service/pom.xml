@@ -30,8 +30,19 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>1.2.0</version>
+            <version>1.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>8.10.0</version>
+        </dependency>
+        <dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-jackson</artifactId>
+			<version>8.10.0</version>
+		</dependency>
+
     </dependencies>
 
     <properties>

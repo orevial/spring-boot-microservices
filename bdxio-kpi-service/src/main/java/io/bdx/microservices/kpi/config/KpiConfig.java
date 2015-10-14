@@ -1,4 +1,4 @@
-package io.bdx.microservices.kpi.loader;
+package io.bdx.microservices.kpi.config;
 
 import org.springframework.context.annotation.Configuration;
 
