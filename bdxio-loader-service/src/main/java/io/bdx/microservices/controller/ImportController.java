@@ -23,4 +23,9 @@ public class ImportController {
             return "Unable to load data : " + e.getCause().getMessage();
         }
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/nbIndexedDocuments")
+    public int getNbIndexedDocuments() {
+        return importerService.getNbIndexedDocuments();
+    }
 }
