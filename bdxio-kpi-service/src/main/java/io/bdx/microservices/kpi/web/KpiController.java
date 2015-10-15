@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.bdx.microservices.kpi.service.KpiLoaderService;
+import io.bdx.microservices.kpi.service.KpiSearchService;
 
 @RestController
 @RequestMapping("/kpi/")
@@ -14,6 +15,9 @@ public class KpiController {
 
 	@Inject
 	private KpiLoaderService kpiLoaderService;
+
+	@Inject
+	private KpiSearchService kpiSearchService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/loader/nbImport")
 	public Integer getNbImportedData() {
@@ -24,12 +28,8 @@ public class KpiController {
 		}
 	}
 
-	
-	// TODO count something in ES
-	
-//	@RequestMapping(method = RequestMethod.GET, value = "/nbIndexedDocuments")
-//	public int getNbIndexedDocuments() {
-//		return importerService.getNbIndexedDocuments();
-//	}
-
+	@RequestMapping(method = RequestMethod.GET, value = "/nbIndexedDocuments")
+	public long getNbIndexedDocuments() throws Exception {
+		return kpiSearchService.getNbImport();
+	}
 }
