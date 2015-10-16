@@ -3,5 +3,5 @@ service:
   max-port: 21000
 
 zookeeper:
-  url: 192.168.1.36
+  url: 192.168.18.91
   port: 2181
