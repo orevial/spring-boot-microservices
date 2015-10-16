@@ -1,0 +1,24 @@
+---
+- hosts: "{{hosts}}"
+  vars:
+    - module_name: bdxio-kpi-service
+  tasks:
+    - git: repo=https://github.com/orevial/spring-boot-microservices.git
+            dest="{{ ansible_env.PWD }}/spring-boot-microservices/"
+      name: Update local Git repository
+
+    - debug: msg="Getting last app version..."
+      name: Getting last app version
+
+    - shell: "mvn package"
+      args:
+        chdir: "{{ ansible_env.PWD }}/spring-boot-microservices/{{ module_name }}/"
+      name: "Package app"
+
+    - command: "./start-app.sh {{ module_name }}"
+      args:
+        chdir: "{{ ansible_env.PWD }}"
+      name: Launching app
+
+    - debug: msg="Making sure app is started..."
+      name: Check app start

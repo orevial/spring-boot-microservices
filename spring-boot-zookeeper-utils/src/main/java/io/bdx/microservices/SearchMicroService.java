@@ -8,6 +8,7 @@ public enum SearchMicroService {
     SPRING_BOOT_HELLO_ZOOKEEPER_SERVICE("spring-boot-hello-zookeeper-service"),
     BDXIO_EDGE_SERVER("bdxio-edge-server"),
     BDX_IO_SEARCHER_SERVICE("bdxio-searcher-service"),
+    BDX_IO_KPI_SERVICE("bdxio-kpi-service"),
     BDX_IO_LOADER_SERVICE("bdxio-loader-service");
 
     private String appName;
