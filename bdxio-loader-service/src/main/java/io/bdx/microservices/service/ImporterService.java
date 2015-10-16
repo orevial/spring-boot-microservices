@@ -57,7 +57,7 @@ public class ImporterService {
 
             BasicDBObject sort = new BasicDBObject("ci", 1);
             DBCursor communesCursor = communesAiresCollection.find().sort(sort);
-            nbIndexedDocuments = 0;
+//            nbIndexedDocuments = 0;
             initializeBulkProcessor();
 
             ESCommuneDocument previousCommune = null;
